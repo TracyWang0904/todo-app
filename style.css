@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 48px 16px;
+  background: #f4f5f7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1f2328;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 20px;
+  font-size: 22px;
+  text-align: center;
+}
+
+#task-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+#task-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#task-input:focus {
+  outline: 2px solid #4f8cff;
+  outline-offset: 1px;
+}
+
+#task-form button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4f8cff;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#task-form button:hover {
+  background: #3d78e8;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 6px 0;
+  border: 1px solid #d0d7de;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #57606a;
+}
+
+.filter-btn.active {
+  background: #1f2328;
+  border-color: #1f2328;
+  color: #fff;
+}
+
+#task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid #eaecef;
+  border-radius: 8px;
+}
+
+.task-item .task-text {
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+  cursor: pointer;
+}
+
+.task-item.done .task-text {
+  text-decoration: line-through;
+  color: #8b949e;
+}
+
+.task-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.task-item .task-edit-input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #4f8cff;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.task-item button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: #57606a;
+  flex-shrink: 0;
+}
+
+.task-item button:hover {
+  background: #f1f3f5;
+}
+
+.task-item .delete-btn:hover {
+  color: #d1242f;
+  background: #ffebe9;
+}
+
+.empty-message {
+  text-align: center;
+  color: #8b949e;
+  font-size: 14px;
+  margin-top: 16px;
+}
