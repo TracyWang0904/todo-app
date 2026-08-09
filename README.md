@@ -2,6 +2,8 @@
 
 A tiny vanilla JS/HTML/CSS to-do list. No backend, no build step, no dependencies — just open `index.html`.
 
+There's also a separate FastAPI backend exercise in [api/](api/) — a plain-Python-list to-do API, not yet wired up to this frontend.
+
 ## Features
 
 - Add a task (Enter or the Add button)
