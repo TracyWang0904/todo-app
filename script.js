@@ -1,7 +1,8 @@
-// ---- 数据：唯一的“真相来源” (source of truth) ----
-let tasks = [];            // 每个任务: { id, text, done }
-let currentFilter = 'all'; // 'all' | 'active' | 'done'
-let nextId = 1;
+// ---- 服务器是唯一的"真相来源"，这里只缓存最近一次从服务器问来的数据 ----
+const API_BASE = 'http://127.0.0.1:8000';
+
+let tasks = [];            // 每个任务: { id, text, done }，永远来自 loadTasks()
+let currentFilter = 'all'; // 'all' | 'active' | 'done'（纯前端的显示状态，不需要问服务器）
 
 // ---- DOM 引用 ----
 const form = document.getElementById('task-form');
@@ -10,32 +11,52 @@ const list = document.getElementById('task-list');
 const filtersEl = document.getElementById('filters');
 const emptyMessage = document.getElementById('empty-message');
 
-// ---- 修改数据的函数：只负责改 tasks，然后调用 render() ----
+// ---- 问服务器要最新数据，并重新画面 ----
 
-function addTask(text) {
+async function loadTasks() {
+  const response = await fetch(`${API_BASE}/tasks`);
+  tasks = await response.json();
+  render();
+}
+
+// ---- 每个操作都先请求服务器改数据，再问一次最新列表 ----
+
+async function addTask(text) {
   const trimmed = text.trim();
   if (!trimmed) return;
-  tasks.push({ id: nextId++, text: trimmed, done: false });
-  render();
+  await fetch(`${API_BASE}/tasks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: trimmed }),
+  });
+  await loadTasks();
 }
 
-function deleteTask(id) {
-  tasks = tasks.filter((task) => task.id !== id);
-  render();
+async function deleteTask(id) {
+  await fetch(`${API_BASE}/tasks/${id}`, { method: 'DELETE' });
+  await loadTasks();
 }
 
-function toggleTask(id) {
+async function toggleTask(id) {
   const task = tasks.find((t) => t.id === id);
-  if (task) task.done = !task.done;
-  render();
+  if (!task) return;
+  await fetch(`${API_BASE}/tasks/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ done: !task.done }),
+  });
+  await loadTasks();
 }
 
-function editTask(id, newText) {
+async function editTask(id, newText) {
   const trimmed = newText.trim();
   if (!trimmed) return;
-  const task = tasks.find((t) => t.id === id);
-  if (task) task.text = trimmed;
-  render();
+  await fetch(`${API_BASE}/tasks/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: trimmed }),
+  });
+  await loadTasks();
 }
 
 function setFilter(filter) {
@@ -103,7 +124,7 @@ function startEditing(li, task) {
   editInput.select();
 }
 
-// ---- 唯一负责“画面”的函数：每次数据变化后，从 tasks 重新画整个列表 ----
+// ---- 唯一负责"画面"的函数：根据当前缓存的 tasks 重新画整个列表 ----
 
 function render() {
   const filtered = getFilteredTasks();
@@ -133,4 +154,4 @@ filtersEl.addEventListener('click', (e) => {
   setFilter(btn.dataset.filter);
 });
 
-render();
+loadTasks();
